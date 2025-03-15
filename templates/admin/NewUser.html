@@ -1,0 +1,39 @@
+{% extends "./Layout/base.html" %} 
+{% block content %}
+  <div class="container mt-5">
+     <div class="row justify-content-center">
+      {% include "./Layout/AdminMenu.html" %}
+        <div class="col-8">
+          <div class='card-header mt-3'
+          style="border: 2px solid #343a40; border-radius: 5px; background-color:rgb(141, 179, 218)"><h2>Add New User</h2></div>
+          <div class='card-body justify-content-center mt-3'>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+              {% endfor %}
+            {% endif %}
+           {% endwith %}
+
+            <form action="{{ url_for('AddNewUser') }}" method="POST" novalidate>
+              {{ form.csrf_token }}
+              <!-- فیلد نام کامل -->
+              <div class="form-group mb-3">
+                  {{ form.name(placeholder='name', class='form-control') }}
+              </div>
+              <div class="form-group mb-3">
+                  {{ form.email(placeholder='enter email', class='form-control') }}
+              </div>
+              <div class="form-group mb-3">
+                  {{ form.password(placeholder='enter password', class='form-control') }}
+              <div class="form-group mb-3">
+                  <button class="btn btn-info w-100">Add User</button>
+              </div>
+               </form>
+          </div>
+        </div>
+      </div>
+     </div>
+  </div>
+
+{% endblock content %}

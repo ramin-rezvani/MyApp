@@ -1,0 +1,31 @@
+{% extends "./Layout/base.html" %} 
+{% block content %}
+  <div class="container mt-5">
+     <div class="row">
+         {% include "./Layout/AdminMenu.html" %}
+        <div class="col-8">
+          <div class='card'>
+          <div class='card-header'>Content</div>
+          <div class='card-body justify-content-center'>
+            <h2>User Information</h2>
+                    <div>
+                    <p><strong>Name:</strong> {{ user.name }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    {% if user.avatar %}
+                        <p><strong>Avatar:</strong></p>
+                        <img src="{{ url_for('static', filename=user.avatar) }}" alt="User Avatar" style="width: 150px; height: 150px;">
+                    {% else %}
+                        <p><strong>Avatar:</strong> No avatar uploaded.</p>
+                    {% endif %}
+                    </div>
+                </div>
+            </form> 
+         </div>
+      </div>
+</div>                
+
+{% endblock content %}
+
+
+
+

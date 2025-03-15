@@ -1,0 +1,17 @@
+{% extends "./Layout/base.html" %} 
+{% block content %}
+  <div class="container mt-5">
+     <div class="row justify-content-center">
+      {% include "./Layout/AdminMenu.html" %}
+        <div class="col-8">
+          <div class='card-header mt-3'
+          style="border: 2px solid #343a40; border-radius: 5px; background-color:rgb(141, 179, 218)"><h2>Content</h2></div>
+          <div class='card-body justify-content-center mt-3'>
+            Content
+          </div>
+        </div>
+      </div>
+     </div>
+  </div>
+
+{% endblock content %}

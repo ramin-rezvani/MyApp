@@ -1,0 +1,70 @@
+{% extends "./Layout/base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <h2 class="text-center">Sign up Form</h2>
+            <hr>
+
+            {% if form.name.errors %}
+                {% for error in form.name.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.confirm.errors %}
+                {% for error in form.confirm.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+
+
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+              {% endfor %}
+            {% endif %}
+           {% endwith %}
+
+            <form action="{{ url_for('SignUp') }}" method="POST" novalidate>
+                {{ form.hidden_tag() }}
+                <!-- فیلد نام کامل -->
+                <div class="form-group mb-3">
+                    {{ form.name(placeholder='name', class='form-control') }}
+                </div>
+                <div class="form-group mb-3">
+                    {{ form.email(placeholder='enter email', class='form-control') }}
+                </div>
+                <div class="form-group mb-3">
+                    {{ form.password(placeholder='enter password', class='form-control') }}
+                </div>
+                <div class="form-group mb-3">
+                    {{ form.confirm(placeholder='enter password again', class='form-control') }}
+                </div>
+                <div class="form-group mb-3">
+                    {{form.recaptcha}}
+                </div>
+                <div class="form-group mb-3">
+                    <button class="btn btn-danger w-100">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

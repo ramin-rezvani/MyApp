@@ -2,17 +2,18 @@
     <div class='card'>
       <div class='card-header'>Settings</div>
         <div class='card-body justify-content-center'>
-           <img class="mb-3" src="{{url_for('static',filename=current_user.avatar)}}" alt="">
+           <img class="text-center mb-3" src="{{url_for('static',filename=current_user.avatar)}}" alt="">
 
           <p class='text-center'><b class='text-center'> {{current_user.name}}</b></p>
           <hr>
           <ul class='list-group text-center'>
-            <li class='list-group-item'><a href="#">Edit Profile</a></li>
-            <li class='list-group-item'><a href="{{ url_for('uploadAvatar') }}">Change Avatar</a></li>
-            <li class='list-group-item'><a href="#">Change Password</a></li>
-            <li class='list-group-item'><a href="#">Courses</a></li>
-            <form action="{{ url_for('logout') }}" method="POST">
-              <button class="btn btn-danger w-100">LogOut</button>
+            <li class='list-group-item'><a href="{{ url_for('Information') }}">Information</a></li>
+            <li class='list-group-item'><a href="{{ url_for('EditProfile') }}">Edit Profile</a></li>
+            <li class='list-group-item'><a href="{{ url_for('UploadAvatar') }}">Change Avatar</a></li>
+            <li class='list-group-item'><a href="{{ url_for('ChangePassword') }}">Change Password</a></li>
+            <!-- <li class='list-group-item'><a href="#">Courses</a></li>-->
+            <form action="{{ url_for('Logout') }}" method="POST">
+              <button class="btn btn-danger w-100">Logout</button>
             </form>
           </ul>
         </div>
