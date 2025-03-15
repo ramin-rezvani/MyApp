@@ -31,7 +31,7 @@ def user_loader(User_id):
 
 #main Route
 app.add_url_rule('/',main,main.Main)
-
+app.add_url_rule('/<string:slug>','Single',main.Single)
 #authentication Route
 
 app.add_url_rule("/signup","SignUp",authentication.SignUp,methods=['get','post'])

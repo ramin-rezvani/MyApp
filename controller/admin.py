@@ -170,11 +170,14 @@ class AdminController:
             if not allowed_file(filename):
                 flash('check pic','danger')
                 return redirect(url_for('AddNewCourse'))
-                
             filesecure = secure_filename(filename)
-            picture.save(os.path.join(app.config['UPLOAD_FOLDER'], filesecure))
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filesecure)
+            picture.save(file_path)  
+            # مسیر نسبی برای دیتابیس
+            relative_path = f"uploads/{filesecure}"  
+          
             
-            newCourse=Course(title=title,content=content,price=price,user_id=current_user.id) 
+            newCourse=Course(title=title,content=content,price=price,image=relative_path,user_id=current_user.id) 
             db.session.add(newCourse)
             db.session.commit()
             flash('new course created','success')
