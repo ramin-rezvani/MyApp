@@ -60,6 +60,7 @@ app.add_url_rule("/admin/newuser","AddNewUser",adminpanel.AddNewUser,methods=['G
 #course route
 app.add_url_rule("/admin/course/new","AddNewCourse",adminpanel.AddNewCourse,methods=['Get','POST'])
 app.add_url_rule("/admin/course","GetCourseList",adminpanel.GetCourseList,methods=['Get','POST'])
+app.add_url_rule("/admin/course/edit/<int:course_id>'","EditCourse",adminpanel.EditCourse,methods=['Get','POST'])
 with app.app_context():
  db.create_all()
  print('Database connection established....')

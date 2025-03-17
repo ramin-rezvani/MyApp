@@ -40,11 +40,16 @@ class Course(db.Model):
      return User.query.get(id).name
   
   @staticmethod
-  def generate_slug(target,value,oldvalue,initiator):
-   if value and(not target.slug and value != oldvalue):
-      target.slug=slugify(value)
+  def generate_slug(target, value, oldvalue, initiator):
+    if value and (not target.slug or (oldvalue and value != oldvalue)):
+        new_slug = slugify(value)
+        # بررسی منحصربه‌فرد بودن slug
+        existing_course = Course.query.filter_by(slug=new_slug).first()
+        if existing_course and existing_course.id != target.id:
+            new_slug = f"{new_slug}-{target.id}"  # اضافه کردن id برای منحصربه‌فرد بودن
+        target.slug = new_slug
       
-db.event.listen(Course.title,'set',Course.generate_slug)
+        event.listen(Course.title, 'set', Course.generate_slug, retval=False)
       
       
   

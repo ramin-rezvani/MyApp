@@ -8,6 +8,9 @@ from werkzeug.utils import secure_filename
 from PIL import Image
 import os
 from slugify import slugify
+import re
+from unidecode import unidecode
+
 
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -32,6 +35,7 @@ class AdminController:
     app.add_url_rule("/admin/newuser","AddNewUser",self.AddNewUser,methods=['GET','POST'])
     app.add_url_rule("/admin/course/new","AddNewCourse",self.AddNewCourse,methods=['GET','POST'])
     app.add_url_rule("/admin/course","GetCourseList",self.GetCourseList,methods=['GET','POST'])
+    app.add_url_rule("/admin/course/edit/<int:course_id>'","EditCourse",self.EditCourse,methods=['Get','POST'])
  @login_required
  def AddNewUser(self):
     form = NewUserForm()
@@ -186,7 +190,61 @@ class AdminController:
 
  def GetCourseList(self):
      getall=Course.query.all()
+     if request.method=='POST':
+         Course.query.filter_by(id=request.args.get('id')).delete()
+         db.session.commit()
+         return redirect(url_for('GetCourseList'))
      return render_template('/admin/courselist.html',courses=getall)
+ 
+ def slugify(text):
+    text = unidecode(text).lower()
+    text = re.sub(r'[^\w\s-]', '', text)
+    text = re.sub(r'[\s-]+', '-', text)
+    text = text.strip('-')
+    return text
 
+ 
 
+ def EditCourse(self,course_id):
+    # دریافت دوره موجود برای ویرایش
+    course = Course.query.get_or_404(course_id)
+    form = CourseForm(obj=course)  # پر کردن فرم با داده‌های موجود
 
+    if request.method == 'POST' and form.validate_on_submit():
+        # به‌روزرسانی داده‌های دوره
+        course.title = form.title.data
+        course.content = form.content.data
+        course.price = request.form.get('price')
+        new_slug = slugify(form.title.data)
+
+        # بررسی منحصربه‌فرد بودن slug
+        existing_course = Course.query.filter_by(slug=new_slug).first()
+        if existing_course and existing_course.id != course.id:
+            new_slug = f"{new_slug}-{course.id}"  # اضافه کردن id برای منحصربه‌فرد بودن
+        course.slug = new_slug
+
+        # مدیریت تصویر
+        if 'pic' in request.files:
+            picture = request.files['pic']
+            if picture.filename:  # اگر تصویر جدید آپلود شده است
+                filename = secure_filename(picture.filename)
+                if not allowed_file(filename):
+                    flash('Invalid file type for picture.', 'danger')
+                    return redirect(url_for('EditCourse', course_id=course_id))
+
+                # حذف تصویر قدیمی (اگر وجود دارد)
+                if course.image:
+                    old_image_path = os.path.join(app.config['UPLOAD_FOLDER'], course.image.split('/')[-1])
+                    if os.path.exists(old_image_path):
+                        os.remove(old_image_path)
+
+                # ذخیره تصویر جدید
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                picture.save(file_path)
+                course.image = f"uploads/{filename}"  # مسیر نسبی برای دیتابیس
+
+        db.session.commit()
+        flash('Course updated successfully.', 'success')
+        return redirect(url_for('GetCourseList'))
+
+    return render_template('/admin/EditCourse.html', form=form, course=course)
