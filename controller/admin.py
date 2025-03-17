@@ -168,8 +168,10 @@ class AdminController:
             title = request.form.get('title')
             content=request.form.get('content')
             price=request.form.get('price')
+
             picture=request.files['pic']       
             filename = picture.filename
+            
                 
             if not allowed_file(filename):
                 flash('check pic','danger')

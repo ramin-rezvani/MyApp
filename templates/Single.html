@@ -8,8 +8,12 @@
                <div class='card-body'>
                   <img src="{{url_for('static',filename=course.image)}}">
                   <p>
-                      {{course.content}}
+                                                       مبلغ دوره:
+                      {{course.price}}
                   </p>
+                  <p>
+                     {{course.content}}
+                 </p>
               </div>
           </div>
         </div>
