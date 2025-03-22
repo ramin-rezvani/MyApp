@@ -58,9 +58,14 @@ app.add_url_rule("/admin/user","GetUserList",adminpanel.GetUserList,methods=['GE
 app.add_url_rule("/admin/newuser","AddNewUser",adminpanel.AddNewUser,methods=['GET','POST'])
 
 #course route
+app.add_url_rule("/admin/episode/new","AddNewEpisode",adminpanel.AddNewEpisode,methods=['Get','POST'])
 app.add_url_rule("/admin/course/new","AddNewCourse",adminpanel.AddNewCourse,methods=['Get','POST'])
 app.add_url_rule("/admin/course","GetCourseList",adminpanel.GetCourseList,methods=['Get','POST'])
-app.add_url_rule("/admin/course/edit/<int:course_id>'","EditCourse",adminpanel.EditCourse,methods=['Get','POST'])
+app.add_url_rule("/admin/episode","GetEpisode",adminpanel.GetEpisode,methods=['Get','POST'])
+app.add_url_rule("/admin/episode/edit/<int:course_id>'","EditEpisode",adminpanel.EditEpisode,methods=['Get','POST'])
+
+
+
 with app.app_context():
  db.create_all()
  print('Database connection established....')

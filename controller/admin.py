@@ -2,8 +2,8 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import app, db  # وارد کردن app و db از extensions
-from models import User,Course
-from forms import ChangePasswordForm, EditProfileForm,NewUserForm,CourseForm
+from models import User,Course,Episode
+from forms import ChangePasswordForm, EditProfileForm,NewUserForm,CourseForm,EpisodeForm
 from werkzeug.utils import secure_filename
 from PIL import Image
 import os
@@ -250,3 +250,43 @@ class AdminController:
         return redirect(url_for('GetCourseList'))
 
     return render_template('/admin/EditCourse.html', form=form, course=course)
+
+ @login_required
+ def AddNewEpisode(self):
+  form = EpisodeForm()
+  courses = Course.query.all()
+  if request.method == 'POST':
+            if form.validate_on_submit():
+                title = request.form.get('title')
+                content = request.form.get('content')
+                number = request.form.get('number')
+                course_id = request.form.get('course')
+                videoUrl = request.form.get('videoUrl')
+                time = request.form.get('time')
+                typeCourse = request.form.get('type')
+
+                newEpisode = Episode(
+                    title=title,
+                    body=content,
+                    number=number,
+                    course_id=course_id,
+                    videoUrl=videoUrl,
+                    time=time,
+                    type=typeCourse
+                )
+                db.session.add(newEpisode)
+                db.session.commit()
+                flash('Episode Created Successfully!', 'success')
+                return redirect(url_for('AddNewEpisode'))
+  return render_template('/Admin/NewEpisode.html', form=form, courses=courses)
+ 
+ def GetEpisode(self):
+      if request.method=='POST':
+          Episode.query.filter_by(id=request.args.get('id')).delete()
+          db.session.commit()
+          return redirect(url_for('GetEpisode'))
+      episodes=Episode.query.all()
+      return render_template('/admin/EpisodeList.html',episodes=episodes)
+  
+ def EditEpisode(self,course_id):
+      pass

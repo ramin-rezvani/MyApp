@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
       self.password= password
       
 class Course(db.Model):
-  __tabelname__='courses'
+  __tablename__='courses'
   id=Column(Integer,primary_key=True)
   title=Column(String)
   slug=Column(String)
@@ -47,5 +47,19 @@ class Course(db.Model):
 db.event.listen(Course.title,'set',Course.generate_slug)
       
       
-      
-  
+class Episode(db.Model):
+   __tabelname__='episode'
+   id=Column(Integer,primary_key=True)
+   course_id=Column(Integer,ForeignKey('courses.id'),nullable=False)
+   title=Column(String) 
+   type=Column(String) 
+   time=Column(String) 
+   videoUrl=Column(String)
+   body=Column(Text)
+   number=Column(Integer)
+   viewCount=Column(Integer,default=0)     
+   date_created=Column(DateTime, default=datetime.now())
+   date_updated=Column(DateTime,default=datetime.now(),onupdate=datetime.now())
+   
+   def getCourse(self):
+      return Course.query.filter_by(id=self.course_id).one()

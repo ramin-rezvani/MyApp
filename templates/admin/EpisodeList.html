@@ -1,0 +1,61 @@
+{% extends "./Layout/base.html" %} 
+{% block content %}
+  <div class="container mt-5">
+     <div class="row justify-content-center">
+       {% if  current_user.admin %}
+         {% include "./Layout/AdminMenu.html" %}
+      {% endif %}
+        <div class="col-9">
+          <div class='card'>
+          <div class='card-header'>Episode list</div>
+          <div class='card-body '>
+            <table class="table table-bordred table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Title</th>
+                  <th scope="col">Body</th>
+                  <th scope="col">Number</th>
+                  <th scope="col">Time</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Course</th>
+                  <th scope="col">Data Created</th>
+                  {%if  current_user.admin %}
+                    <th scope="col">Operation</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                 {% for episode in episodes %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ episode.title }}</td>
+                  <td>{{ episode.body }}</td>
+                  <td>{{ episode.number }}</td>
+                  <td>{{ episode.time }}</td>
+                  <td>{{ episode.type }}</td>
+                  <td>{{ episode.getCourse().title }}</td>
+                 
+                  <td>{{ episode.date_created }}</td>
+                 
+                  {%  if  current_user.admin %}
+                    <td>
+                      <div class="btn-group" role="group">
+                       <a href="{{ url_for('EditEpisode', course_id=episode.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                      <form action="{{url_for('GetEpisode')}}?id={{episode.id}}" method="POST" style="display: inline;">
+                       <!--  <input type="hidden" name="csrf_token" value="#"> -->
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete Episode')">DEL</button>
+                      </form>
+                    </div>
+                    </td>
+                  {% endif %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+         </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

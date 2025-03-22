@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm, RecaptchaField
-from wtforms import StringField, PasswordField, SubmitField, EmailField,TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, EmailField,TextAreaField,DecimalField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from flask_wtf.file import FileField, FileAllowed
 class SignUpForm(FlaskForm):
@@ -44,3 +44,10 @@ class NewUserForm(FlaskForm):
 class CourseForm(FlaskForm):
     title=StringField("title",validators=[DataRequired('Please Enter Course Title')])
     content=TextAreaField('content',validators=[DataRequired('please enter course content')])
+    
+class EpisodeForm(FlaskForm):
+    title = StringField('title', validators=[DataRequired('Title Field is Required')])
+    content = TextAreaField('content', validators=[DataRequired('Content of Course is Required')])
+    videoUrl = StringField('videoUrl', validators=[DataRequired('Video URL Field is Required')])
+    time = StringField('time', validators=[DataRequired('Video time Field is Required')])
+    number = DecimalField('number', validators=[DataRequired('Number Field is Required')])
