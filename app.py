@@ -62,7 +62,8 @@ app.add_url_rule("/admin/episode/new","AddNewEpisode",adminpanel.AddNewEpisode,m
 app.add_url_rule("/admin/course/new","AddNewCourse",adminpanel.AddNewCourse,methods=['Get','POST'])
 app.add_url_rule("/admin/course","GetCourseList",adminpanel.GetCourseList,methods=['Get','POST'])
 app.add_url_rule("/admin/episode","GetEpisode",adminpanel.GetEpisode,methods=['Get','POST'])
-app.add_url_rule("/admin/episode/edit/<int:course_id>'","EditEpisode",adminpanel.EditEpisode,methods=['Get','POST'])
+app.add_url_rule("/admin/episode/edit","EditEpisode",adminpanel.EditEpisode,methods=['Get','POST'])
+
 
 
 

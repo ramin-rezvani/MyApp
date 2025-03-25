@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import app, db  # وارد کردن app و db از extensions
 from models import User,Course,Episode
-from forms import ChangePasswordForm, EditProfileForm,NewUserForm,CourseForm,EpisodeForm
+from forms import ChangePasswordForm, EditProfileForm,NewUserForm,CourseForm,EpisodeForm,EditEpisodeForm
 from werkzeug.utils import secure_filename
 from PIL import Image
 import os
@@ -36,6 +36,7 @@ class AdminController:
     app.add_url_rule("/admin/course/new","AddNewCourse",self.AddNewCourse,methods=['GET','POST'])
     app.add_url_rule("/admin/course","GetCourseList",self.GetCourseList,methods=['GET','POST'])
     app.add_url_rule("/admin/course/edit/<int:course_id>'","EditCourse",self.EditCourse,methods=['Get','POST'])
+    app.add_url_rule("/admin/episode/edit","EditEpisode",self.EditEpisode,methods=['Get','POST'])
  @login_required
  def AddNewUser(self):
     form = NewUserForm()
@@ -288,5 +289,32 @@ class AdminController:
       episodes=Episode.query.all()
       return render_template('/admin/EpisodeList.html',episodes=episodes)
   
- def EditEpisode(self,course_id):
-      pass
+ def EditEpisode(self):
+    form = EditEpisodeForm()
+    episode = Episode.query.filter_by(id=request.args.get('id')).one()
+    courses = Course.query.all()
+
+    if request.method == 'POST':
+        if form.validate_on_submit() and request.form.get('body') != '':
+            title = request.form.get('title')
+            content = request.form.get('body')
+            number = request.form.get('number')
+            course_id = request.form.get('course')
+            videoUrl = request.form.get('videoUrl')
+            time = request.form.get('time')
+            typeCourse = request.form.get('type')
+
+            episode.title = title
+            episode.body = content
+            episode.number = number
+            episode.course_id = course_id
+            episode.videoUrl = videoUrl
+            episode.time = time
+            episode.type = typeCourse
+
+            db.session.add(episode)
+            db.session.commit()
+
+            return redirect(url_for('GetEpisode'))
+
+    return render_template('/admin/EditEpisode.html', form=form, episode=episode, courses=courses)

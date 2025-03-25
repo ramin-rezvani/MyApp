@@ -1,0 +1,74 @@
+{% extends "./Layout/base.html" %} 
+{% block content %}
+  <div class="container mt-5">
+     <div class="row justify-content-center">
+        {% include "./Layout/AdminMenu.html" %}
+        <div class="col-6">
+          <div class="card shadow">
+              <div class="card-header bg-dark text-white">
+                  <h2>Edit Episode</h2>
+              </div>
+              <div class="card-body">
+                  {% if form.errors %}
+                   {% for field, errors in form.errors.items() %}
+                    <div class="alert alert-danger">{{ ', '.join(errors) }}</div>
+                   {% endfor %}
+                  {% endif %}
+                  {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                          {% for category, message in messages %}
+                              <div class="alert alert-{{ category }}">{{ message }}</div>
+                          {% endfor %}
+                      {% endif %}
+                  {% endwith %}
+                  <form action="{{ url_for('EditEpisode') }}?id={{ episode.id }}" method="post">
+                    {{ form.csrf_token }}
+                
+                    <div class="form-group mb-3">
+                        {{ form.title(class="form-control", placeholder="Enter Title", value=episode.title) }}
+                    </div>
+                
+                    <div class="form-group mb-3">
+                        <textarea name="body" class='form-control'placeholder='enter body'>{{ episode.body }} </textarea>
+                    </div>
+                
+                    <div class="form-group mb-3">
+                        {{ form.number(class="form-control", placeholder="Enter Number Video", value=episode.number) }}
+                    </div>
+                
+                    <div class="form-group mb-3">
+                        {{ form.videoUrl(class="form-control", placeholder="Enter URL VIDEO", value=episode.videoUrl) }}
+                    </div>
+                
+                    <div class="form-group mb-3">
+                        {{ form.time(class="form-control", placeholder="Enter Time Video Like 00:00:00", value=episode.time) }}
+                    </div>
+                
+                    <div class="form-group mb-3">
+                        <select name="type" class="form-control">
+                            <option value="Free" {{ 'selected' if episode.type == 'Free' else '' }}>Free</option>
+                            <option value="Cash" {{ 'selected' if episode.type == 'Cash' else '' }}>Cash</option>
+                        </select>
+                    </div>
+                
+                    <div class="form-group mb-3">
+                        <div class="form-group">
+                            <select name="course" class="form-control">
+                                {% for course in courses %}
+                                    <option value="{{ course.id }}" {{ 'selected' if episode.course_id == course.id else '' }}>
+                                        {{ course.title }}
+                                    </option>
+                                {% endfor %}
+                        </select>
+                    </div>
+
+                      <div class="form-group mb-3">
+                          <button class="btn btn-dark w-100">Edit Episode</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+        </div>
+     </div>
+  </div>
+{% endblock content %}

@@ -51,3 +51,9 @@ class EpisodeForm(FlaskForm):
     videoUrl = StringField('videoUrl', validators=[DataRequired('Video URL Field is Required')])
     time = StringField('time', validators=[DataRequired('Video time Field is Required')])
     number = DecimalField('number', validators=[DataRequired('Number Field is Required')])
+    
+class EditEpisodeForm(FlaskForm):
+    title = StringField('title', validators=[DataRequired('Title Field is Required')])
+    videoUrl = StringField('videoUrl', validators=[DataRequired('Video URL Field is Required')])
+    time = StringField('time', validators=[DataRequired('Video time Field is Required')])
+    number = DecimalField('number', validators=[DataRequired('Number Field is Required')])
