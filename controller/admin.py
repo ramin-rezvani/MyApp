@@ -35,7 +35,7 @@ class AdminController:
     app.add_url_rule("/admin/newuser","AddNewUser",self.AddNewUser,methods=['GET','POST'])
     app.add_url_rule("/admin/course/new","AddNewCourse",self.AddNewCourse,methods=['GET','POST'])
     app.add_url_rule("/admin/course","GetCourseList",self.GetCourseList,methods=['GET','POST'])
-    app.add_url_rule("/admin/course/edit/<int:course_id>'","EditCourse",self.EditCourse,methods=['Get','POST'])
+    app.add_url_rule("/admin/course/edit/<int:course_id>","EditCourse",self.EditCourse,methods=['Get','POST'])
     app.add_url_rule("/admin/episode/edit","EditEpisode",self.EditEpisode,methods=['Get','POST'])
  @login_required
  def AddNewUser(self):
@@ -164,12 +164,13 @@ class AdminController:
  @login_required
  def AddNewCourse(self):
     form=CourseForm()
+    categories=Category.query.all()
     if request.method == 'POST':
         if form.validate_on_submit() and 'pic' in request.files:
             title = request.form.get('title')
             content=request.form.get('content')
             price=request.form.get('price')
-
+            category=request.form.get('category')
             picture=request.files['pic']       
             filename = picture.filename
             
@@ -184,12 +185,13 @@ class AdminController:
             relative_path = f"uploads/{filesecure}"  
           
             
-            newCourse=Course(title=title,content=content,price=price,image=relative_path,user_id=current_user.id) 
+            newCourse=Course(title=title,content=content,price=price,
+                             image=relative_path,user_id=current_user.id,category_id=category) 
             db.session.add(newCourse)
             db.session.commit()
             flash('new course created','success')
             return redirect(url_for('AddNewCourse'))
-    return render_template('/admin/NewCourse.html',form=form)
+    return render_template('/admin/NewCourse.html',form=form,categories=categories)
 
  def GetCourseList(self):
      getall=Course.query.all()
@@ -213,12 +215,13 @@ class AdminController:
     # دریافت دوره موجود برای ویرایش
     course = Course.query.get_or_404(course_id)
     form = CourseForm(obj=course)  # پر کردن فرم با داده‌های موجود
-
+    categories=Category.query.all()
     if request.method == 'POST' and form.validate_on_submit():
         # به‌روزرسانی داده‌های دوره
         course.title = form.title.data
         course.content = form.content.data
-        course.price = request.form.get('price')
+        course.price = form.price.data
+        course.category_id=request.form.get('category')
         new_slug = slugify(form.title.data)
 
         # بررسی منحصربه‌فرد بودن slug
@@ -234,7 +237,7 @@ class AdminController:
                 filename = secure_filename(picture.filename)
                 if not allowed_file(filename):
                     flash('Invalid file type for picture.', 'danger')
-                    return redirect(url_for('EditCourse', course_id=course_id))
+                    return redirect(url_for('EditCourse', course_id=course_id,categories=categories))
 
                 # حذف تصویر قدیمی (اگر وجود دارد)
                 if course.image:
@@ -251,7 +254,7 @@ class AdminController:
         flash('Course updated successfully.', 'success')
         return redirect(url_for('GetCourseList'))
 
-    return render_template('/admin/EditCourse.html', form=form, course=course)
+    return render_template('/admin/EditCourse.html', form=form, course=course,categories=categories)
 
  @login_required
  def AddNewEpisode(self):
@@ -292,7 +295,7 @@ class AdminController:
   
  def EditEpisode(self):
     form = EditEpisodeForm()
-    episode = Episode.query.filter_by(id=request.args.get('id')).one()
+    episode = Episode.query.filter_by(id=request.args.get('id')).first()
     courses = Course.query.all()
 
     if request.method == 'POST':

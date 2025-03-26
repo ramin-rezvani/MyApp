@@ -42,6 +42,7 @@ class NewUserForm(FlaskForm):
     submit = SubmitField("Add New User")
     
 class CourseForm(FlaskForm):
+    price = StringField("Price", validators=[DataRequired("Pricefield is required.")])
     title=StringField("title",validators=[DataRequired('Please Enter Course Title')])
     content=TextAreaField('content',validators=[DataRequired('please enter course content')])
     

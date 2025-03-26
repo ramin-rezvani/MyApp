@@ -4,7 +4,7 @@ import secrets
 import os
 from flask_login import LoginManager,login_user,logout_user,current_user,logout_user,login_required
 from controller import authentication,main,userPanel,adminpanel
-from models import User
+from models import User,Category
 
 
 app.secret_key = secrets.token_hex(32)
@@ -31,6 +31,7 @@ def user_loader(User_id):
 
 #main Route
 app.add_url_rule('/',main,main.Main)
+app.add_url_rule('/category/<string:name>','viewCategory',main.viewCategory)
 app.add_url_rule('/<string:slug>','Single',main.Single)
 #authentication Route
 
@@ -90,5 +91,10 @@ def Commafy(value):
 
 #app.jinja_env.filters['Commafy'] = commafy
 
+@app.context_processor
+def ContextProcessor():
+    return{
+        'categories':Category.query.all()
+    }
 if __name__ == '__main__':
     app.run(debug=True)
