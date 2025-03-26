@@ -2,8 +2,8 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import app, db  # وارد کردن app و db از extensions
-from models import User,Course,Episode
-from forms import ChangePasswordForm, EditProfileForm,NewUserForm,CourseForm,EpisodeForm,EditEpisodeForm
+from models import User,Course,Episode,Category
+from forms import ChangePasswordForm, EditProfileForm,NewUserForm,CourseForm,EpisodeForm,EditEpisodeForm,CategoryForm
 from werkzeug.utils import secure_filename
 from PIL import Image
 import os
@@ -195,6 +195,7 @@ class AdminController:
      getall=Course.query.all()
      if request.method=='POST':
          Course.query.filter_by(id=request.args.get('id')).delete()
+         Episode.query.filter_by(course_id=request.args.get('id')).delete()
          db.session.commit()
          return redirect(url_for('GetCourseList'))
      return render_template('/admin/courselist.html',courses=getall)
@@ -318,3 +319,57 @@ class AdminController:
             return redirect(url_for('GetEpisode'))
 
     return render_template('/admin/EditEpisode.html', form=form, episode=episode, courses=courses)
+ def AddNewCategory(self):
+    if not current_user.admin:
+       abort(403)
+    
+    form = CategoryForm()
+    if form.validate_on_submit():
+        new_category = Category(name=form.name.data)
+        db.session.add(new_category)
+        db.session.commit()
+        flash('Category Created Successfully', 'success')
+        return redirect(url_for('AddNewCategory'))
+    
+    categories = Category.query.all()
+    return render_template('/admin/Categories/NewCategory.html', form=form)
+
+ def GetCategoryList(self):
+  if request.method=='POST':
+    Category.query.filter_by(id=request.args.get('id')).delete()
+    db.session.commit()
+    return redirect(url_for('GetCategoryList'))
+  categories= Category.query.all()
+  return render_template('admin/Categories/ListCategory.html',categories=categories)
+ 
+ def EditCategory(self):
+    if not current_user.admin:
+        abort(403)
+
+    # گرفتن id از پارامترهای URL (برای GET) یا فرم (برای POST)
+    category_id = request.args.get('id') if request.method == 'GET' else request.form.get('category_id')
+    if not category_id:
+        flash('Category ID is missing.', 'danger')
+        return redirect(url_for('GetCategoryList'))
+
+    # تبدیل id به عدد
+    try:
+        category_id = int(category_id)
+    except (ValueError, TypeError):
+        flash('Invalid category ID.', 'danger')
+        return redirect(url_for('GetCategoryList'))
+
+    # پیدا کردن دسته‌بندی
+    category = Category.query.filter_by(id=category_id).first()
+    if not category:
+        flash('Category not found.', 'danger')
+        return redirect(url_for('GetCategoryList'))
+
+    form = CategoryForm(obj=category)
+    if form.validate_on_submit():
+        category.name = form.name.data
+        db.session.commit()
+        flash('Category updated successfully!', 'success')
+        return redirect(url_for('GetCategoryList'))
+
+    return render_template('/admin/Categories/EditCategory.html',form=form, category=category)

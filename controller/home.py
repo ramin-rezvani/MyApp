@@ -1,6 +1,6 @@
 from flask import render_template,request,abort
 from extensions import app
-from models import User,Course
+from models import User,Course,Episode
 class HomeController:
     def __init__(self):
         self.app = app
@@ -16,9 +16,10 @@ class HomeController:
 
     def Single(self, slug):
         course = Course.query.filter_by(slug=slug).first()
+        episodes=Episode.query.filter_by(course_id=course.id).all()
         if not course:
           abort(404)  # یا یه صفحه 404 رندر کن
-        return render_template('Single.html', course=course)   
+        return render_template('Single.html', course=course,episodes=episodes)   
         
 
     

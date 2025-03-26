@@ -1,23 +1,57 @@
-{% extends "./Layout/base.html" %} 
+{% extends "./Layout/base.html" %}
 {% block content %}
-  <div class="container mt-5">
-     <div class="row justify-content-center">
-          <div class="col-6">
-            <div class='card'>
-               <div class='card-header'>{{course.title}}</div>
-               <div class='card-body'>
-                  <img src="{{url_for('static',filename=course.image)}}">
-                  <p>
-                                                       مبلغ دوره:
-                      {{course.price}}
-                  </p>
-                  <p>
-                     {{course.content}}
-                 </p>
-              </div>
+  <div class="container mt-3">
+    <div class="row justify-content-center">
+      {% if course %}
+        <div class="col-3">
+          <div class="card text-center">
+            <div class="card-header">Payment</div>
+            <div class="card-body">
+              <span class="btn btn-dark btn-lg w-75 mt-4">{{ course.price | Commafy }}</span>
+               <hr>
+              <form action="#" method="post">
+                <button class="btn btn-success w-50">Add To Basket</button>
+              </form>
+            </div>
           </div>
         </div>
-     </div>
+        <div class="col-8">
+          <div class="card">
+            <img width="300" height="300" src="{{ url_for('static', filename=course.image) if course.image else url_for('static', filename='default.jpg') }}" class="card-img-top">
+            <div class="card-body">
+              <h2 class="card-title">{{ course.title }}</h2>
+              <p class="card-text">{{ course.content }}</p>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <p>Course not found.</p>
+      {% endif %}
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-3">
+        </div>
+        <div class="col-8 mt-4">
+          <div class="card">
+            <div class="card-header">List of Episode</div>
+            <div class="card-body">
+              <h2 class="text-center">ALL Episodes</h2>
+              <hr>
+              <ul>
+               {%for episode in episodes%}
+               <li class='list-group-item'>
+                  <span class="badge bg-info">{{ episode.number }}</span>
+                    <span class="text-secondary">{{ episode.title }}</span>
+                    <div class="float-end">
+                      <span class="badge bg-dark">{{ episode.time }}</span>
+                      <span class="badge bg-success">{{ episode.type }}</span>
+                      <span class="badge bg-danger">Download</span>
+                    </div>
+               </li>
+               {%endfor%}
+              </ul>
+            </div>
+          </div>
+        </div>
   </div>
-
-{% endblock content %}
+{% endblock %}

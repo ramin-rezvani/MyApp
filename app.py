@@ -58,7 +58,11 @@ app.add_url_rule("/admin/user","GetUserList",adminpanel.GetUserList,methods=['GE
 app.add_url_rule("/admin/newuser","AddNewUser",adminpanel.AddNewUser,methods=['GET','POST'])
 
 #course route
+
 app.add_url_rule("/admin/episode/new","AddNewEpisode",adminpanel.AddNewEpisode,methods=['Get','POST'])
+app.add_url_rule("/admin/category/new","AddNewCategory",adminpanel.AddNewCategory,methods=['Get','POST'])
+app.add_url_rule("/admin/category","GetCategoryList",adminpanel.GetCategoryList,methods=['Get','POST'])
+app.add_url_rule("/admin/category/edit","EditCategory",adminpanel.EditCategory,methods=['Get','POST'])
 app.add_url_rule("/admin/course/new","AddNewCourse",adminpanel.AddNewCourse,methods=['Get','POST'])
 app.add_url_rule("/admin/course","GetCourseList",adminpanel.GetCourseList,methods=['Get','POST'])
 app.add_url_rule("/admin/episode","GetEpisode",adminpanel.GetEpisode,methods=['Get','POST'])
@@ -70,6 +74,21 @@ app.add_url_rule("/admin/episode/edit","EditEpisode",adminpanel.EditEpisode,meth
 with app.app_context():
  db.create_all()
  print('Database connection established....')
+ 
+@app.template_filter('Commafy')
+def Commafy(value):
+    try:
+        # اگه value یه رشته هست، کاراکترهای غیرعددی رو حذف کن و به عدد تبدیل کن
+        if isinstance(value, str):
+            # فقط اعداد رو نگه دار (مثلاً "1000s" -> "1000")
+            value = ''.join(filter(str.isdigit, value))
+        # به عدد تبدیل کن
+        value = int(value)
+        return "{:,}".format(value)
+    except (ValueError, TypeError):
+        return value  # اگه تبدیل ممکن نبود، همون مقدار رو برگردون
+
+#app.jinja_env.filters['Commafy'] = commafy
 
 if __name__ == '__main__':
     app.run(debug=True)
