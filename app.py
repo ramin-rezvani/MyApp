@@ -31,6 +31,7 @@ def user_loader(User_id):
 
 #main Route
 app.add_url_rule('/',main,main.Main)
+app.add_url_rule('/search','getResultSearch',main.getResultSearch)
 app.add_url_rule('/category/<string:name>','viewCategory',main.viewCategory)
 app.add_url_rule('/<string:slug>','Single',main.Single)
 #authentication Route

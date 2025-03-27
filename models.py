@@ -34,6 +34,7 @@ class Course(db.Model):
   students=Column(String)
   category_id=Column(Integer,ForeignKey('categories.id'))
   ViewCount=Column(Integer,default=0)
+  time=Column(String,default='00:00:00')
   user_id=Column(Integer,ForeignKey('user.id'))
   date_created=db.Column(db.DateTime, default=datetime.now)
   updated_post=Column(db.DateTime,default=datetime.now,onupdate=datetime.now)

@@ -10,6 +10,7 @@ import os
 from slugify import slugify
 import re
 from unidecode import unidecode
+from math import floor
 
 
 UPLOAD_FOLDER = 'static/uploads'
@@ -282,13 +283,16 @@ class AdminController:
                 db.session.add(newEpisode)
                 db.session.commit()
                 flash('Episode Created Successfully!', 'success')
+                self.UpdateCourseTime(course_id)
                 return redirect(url_for('AddNewEpisode'))
   return render_template('/Admin/NewEpisode.html', form=form, courses=courses)
  
  def GetEpisode(self):
       if request.method=='POST':
+          courseId=request.form.get('courseid')
           Episode.query.filter_by(id=request.args.get('id')).delete()
           db.session.commit()
+          self.UpdateCourseTime(courseId)
           return redirect(url_for('GetEpisode'))
       episodes=Episode.query.all()
       return render_template('/admin/EpisodeList.html',episodes=episodes)
@@ -318,8 +322,10 @@ class AdminController:
 
             db.session.add(episode)
             db.session.commit()
+            self.UpdateCourseTime(course_id)
 
             return redirect(url_for('GetEpisode'))
+        
 
     return render_template('/admin/EditEpisode.html', form=form, episode=episode, courses=courses)
  def AddNewCategory(self):
@@ -376,3 +382,30 @@ class AdminController:
         return redirect(url_for('GetCategoryList'))
 
     return render_template('/admin/Categories/EditCategory.html',form=form, category=category)
+ def UpdateCourseTime(self, courseId):
+    course = Course.query.filter_by(id=courseId).one()
+    episodes = Episode.query.filter_by(course_id=courseId).all()
+    
+    course.time=self.UpdateTime(episodes)
+    
+    db.session.add(course)
+    db.session.commit()
+    
+ def UpdateTime(self, episodes):
+    second = 0
+    for episode in episodes:
+        time = episode.time.split(':')  # 00:00:00 [ hours , minutes , second ]
+        if len(time) == 2:
+            second += int(time[0]) * 60
+            second += int(time[1])
+        if len(time) == 3:
+            second += int(time[0]) * 3600
+            second += int(time[1]) * 60
+            second += int(time[2])
+
+    minutes = floor(second / 60)
+    hours = floor(minutes / 60)
+
+    second = floor(((second / 60) % 1) * 60)
+
+    return "{:02d}:{:02d}:{:02d}".format(hours, minutes, second)

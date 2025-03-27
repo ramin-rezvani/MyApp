@@ -27,7 +27,18 @@ class HomeController:
           abort(404)
      page = request.args.get('page', default=1, type=int)
      getCourses = Course.query.filter_by(category_id=getCategory.id).paginate(page=page, per_page=3)
-     return render_template('Category.html', courses=getCourses, category=getCategory)    
+     return render_template('Category.html', courses=getCourses, category=getCategory) 
+  
+    def getResultSearch(self):
+     list_posts = []
+     searchInput = request.args.get('s')
+     posts = Course.query.all()
+    
+     for post in posts:
+        if searchInput.lower() in post.title.lower() or searchInput.lower() in post.content.lower():
+          list_posts.append(post)
+    
+     return render_template('resultSearch.html', searchInput=searchInput, courses=list_posts)   
     
 
     
