@@ -9,10 +9,16 @@
             <div class="card-body">
               <span class="btn btn-dark btn-lg w-75 mt-4">{{ course.price | Commafy }}</span>
                <hr>
-              <form action="#" method="post">
+              {%if current_user.is_authenticated%}
+              <form action="{{url_for('AddToBascket')}}" method="post">
+                <input type='hidden'value='{{course.id}}'name='course_id'>
+                <input type='hidden'value='{{course.slug}}'name='course_slug'>
                 <button class="btn btn-success w-50">Add To Basket</button>
               </form>
             </div>
+              {%else%}
+                 <a class='btn btn-sm btn-warning'href='{{url_for('Login')}}'>Please Log In Pay</a>
+              {%endif%}
           </div>
         </div>
         <div class="col-8">

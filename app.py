@@ -32,6 +32,9 @@ def user_loader(User_id):
 #main Route
 app.add_url_rule('/',main,main.Main)
 app.add_url_rule('/search','getResultSearch',main.getResultSearch)
+app.add_url_rule('/deleteCourse/<int:id>','DeleteCourse',main.DeleteCourse,methods=['post'])
+app.add_url_rule('/addtobascket','AddToBascket',main.AddToBascket,methods=['Get','post'])
+app.add_url_rule('/checkout','Checkout',main.Checkout,methods=['Get','post'])
 app.add_url_rule('/category/<string:name>','viewCategory',main.viewCategory)
 app.add_url_rule('/<string:slug>','Single',main.Single)
 #authentication Route

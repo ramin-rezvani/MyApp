@@ -1,0 +1,40 @@
+{% extends "./Layout/Base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <h2>Checkout Page</h2>
+        <hr>
+        <div class="col-8">
+            <table class="table table-borderless">
+                <thead>
+                    <tr>
+                        <th>Course Title</th>
+                        <th>Price</th>
+                        <th>Operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if bascket | length > 0 %}
+                        {% for product in bascket %}
+                            <tr>
+                                <td>{{ product.GetCourse().title }}</td>
+                                <td>{{ product.GetCourse().price }}</td>
+                                <td>
+                                    <form action="{{ url_for('DeleteCourse', id=product.id) }}" method="POST">
+                                        <button class="btn btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="2" class="text-right"><strong>Total Price:</strong></td>
+                            <td>{{ total_price  | Commafy}}</td>
+                        </tr>
+                    {% else %}
+                        <h3 class="text-center mb-3 text-info">Bascket is Empty</h3>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

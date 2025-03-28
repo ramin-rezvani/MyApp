@@ -1,6 +1,17 @@
-from flask import render_template,request,abort
-from extensions import app
-from models import User,Course,Episode,Category
+from flask import render_template, request, redirect, url_for, flash
+from flask_login import login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from extensions import app, db  # وارد کردن app و db از extensions
+from models import User,Course,Episode,Category,Bascket
+from forms import ChangePasswordForm, EditProfileForm,NewUserForm,CourseForm,EpisodeForm,EditEpisodeForm,CategoryForm
+from werkzeug.utils import secure_filename
+from PIL import Image
+import os
+from slugify import slugify
+import re
+from unidecode import unidecode
+from math import floor
+
 class HomeController:
     def __init__(self):
         self.app = app
@@ -39,6 +50,34 @@ class HomeController:
           list_posts.append(post)
     
      return render_template('resultSearch.html', searchInput=searchInput, courses=list_posts)   
-    
+ 
+    def AddToBascket(self):
+        courseId=request.form.get('course_id')
+        slug= request.form.get('slug')
+        user_id = current_user.id
+        BascketQuery = Bascket.query.filter_by(user_id=user_id).all()
+        if BascketQuery:
+            for product in BascketQuery:
+                if product.course_id == courseId:
+                    flash('Course Was Added To Bascket')
+                    return redirect(url_for('Single', slug=slug))
+        
+        newBascket = Bascket(user_id=user_id, course_id=courseId)
+        db.session.add(newBascket)
+        db.session.commit()
+        return redirect(url_for('Checkout'))
+
+    def Checkout(self):
+        basckets = Bascket.query.filter_by(user_id=current_user.id).all()
+        total_price= 0
+        for product in basckets:
+            total_price += int(product.GetCourse().price)
+        return render_template('Checkout.html', bascket=basckets,total_price=total_price)
+
+    def DeleteCourse(self, id):
+        Bascket.query.filter_by(id=id).delete()
+        db.session.commit()
+        return redirect(url_for('Checkout'))
+        
 
     

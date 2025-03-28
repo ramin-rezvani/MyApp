@@ -71,3 +71,11 @@ class Category(db.Model):
    __tablename__ = 'categories'
    id = Column(Integer,primary_key=True)
    name = Column(String)
+   
+class Bascket(db.Model):
+   id= Column(Integer,primary_key=True)
+   course_id = Column(Integer,ForeignKey('courses.id'),nullable=True)
+   user_id = Column(Integer,ForeignKey('user.id'),nullable=True)
+    
+   def GetCourse(self):
+      return Course.query.filter_by(id=self.course_id).first()
