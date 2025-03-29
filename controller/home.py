@@ -78,6 +78,26 @@ class HomeController:
         Bascket.query.filter_by(id=id).delete()
         db.session.commit()
         return redirect(url_for('Checkout'))
+    
+    def Payment(self):
+        baskets = Bascket.query.filter_by(user_id = current_user.id).all()
+        total_price = 0
+        listId = []
+        for product in baskets:
+            total_price += int(product.GetCourse().price)
+            listId.append(str(product.GetCourse().id))
+
+        # Payment OK --- CallBackPayment --- SUCCESSFULL
+        for item in listId:
+            items = Course.query.filter_by(id = int(item)).first()
+            items.students = ",".join(str(items.students) + "," + ",".join(str(current_user.id)))
+            db.session.add(items)
+            db.session.commit()
+            Bascket.query.filter_by(user_id = current_user.id).delete()
+            db.session.commit()
+            return redirect(url_for('main'))
         
+        return redirect(url_for('Checkout'))
+            
 
     

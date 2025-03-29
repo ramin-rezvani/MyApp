@@ -31,7 +31,7 @@ class Course(db.Model):
   content=Column(Text)
   image=Column(String,default='/uploads/avatar.png')
   CommentCount=Column(Integer,default=0)
-  students=Column(String)
+  students=Column(String, nullable=False, default="")
   category_id=Column(Integer,ForeignKey('categories.id'))
   ViewCount=Column(Integer,default=0)
   time=Column(String,default='00:00:00')
@@ -51,21 +51,25 @@ db.event.listen(Course.title,'set',Course.generate_slug)
       
       
 class Episode(db.Model):
-   __tabelname__='episode'
-   id=Column(Integer,primary_key=True)
-   course_id=Column(Integer,ForeignKey('courses.id'),nullable=False)
-   title=Column(String) 
-   type=Column(String) 
-   time=Column(String) 
-   videoUrl=Column(String)
-   body=Column(Text)
-   number=Column(Integer)
-   viewCount=Column(Integer,default=0)     
-   date_created=Column(DateTime, default=datetime.now())
-   date_updated=Column(DateTime,default=datetime.now(),onupdate=datetime.now())
+    __tablename__ = 'episode'  # اصلاح تایپو
+    id = Column(Integer, primary_key=True)
+    course_id = Column(Integer, ForeignKey('courses.id'), nullable=False)
+    title = Column(String, nullable=False, default="بدون عنوان")
+    type = Column(String, nullable=False, default="نامشخص")
+    time = Column(String, nullable=False, default="00:00")
+    videoUrl = Column(String)
+    body = Column(Text)
+    number = Column(Integer, nullable=False, default=0)
+    viewCount = Column(Integer, default=0)
+    date_created = Column(DateTime, default=datetime.now)
+    date_updated = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+    def getCourse(self):
+        course = Course.query.filter_by(id=self.course_id).first()
+        if not course:
+            raise ValueError(f"No course found with id {self.course_id} for episode {self.id}")
+        return course
    
-   def getCourse(self):
-      return Course.query.filter_by(id=self.course_id).one()
    
 class Category(db.Model):
    __tablename__ = 'categories'

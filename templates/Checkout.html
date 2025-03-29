@@ -30,6 +30,11 @@
                             <td colspan="2" class="text-right"><strong>Total Price:</strong></td>
                             <td>{{ total_price  | Commafy}}</td>
                         </tr>
+                        <form action='{{url_for('Payment')}}' method='post'>
+                            <div class="justify-content-center text-center mt-3">
+                                <button class='btn btn-outline-success'>Payment</button>
+                            </div>
+                        </form>
                     {% else %}
                         <h3 class="text-center mb-3 text-info">Bascket is Empty</h3>
                     {% endif %}

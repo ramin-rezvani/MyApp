@@ -13,12 +13,17 @@
               <form action="{{url_for('AddToBascket')}}" method="post">
                 <input type='hidden'value='{{course.id}}'name='course_id'>
                 <input type='hidden'value='{{course.slug}}'name='course_slug'>
-                <button class="btn btn-success w-50">Add To Basket</button>
-              </form>
-            </div>
+                {%if current_user.id | string not in course.students  %}
+                  <button class="btn btn-success w-50">Add To Basket</button>
+                {%else%}
+                  <p class='btn btn-warning w-75'>You In Course</p>
+                {%endif%}
+              
               {%else%}
                  <a class='btn btn-sm btn-warning'href='{{url_for('Login')}}'>Please Log In Pay</a>
               {%endif%}
+            </form>
+          </div>
           </div>
         </div>
         <div class="col-8">
@@ -30,34 +35,39 @@
             </div>
           </div>
         </div>
-      {% else %}
-        <p>Course not found.</p>
-      {% endif %}
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-3">
-        </div>
-        <div class="col-8 mt-4">
-          <div class="card">
-            <div class="card-header">List of Episode</div>
-            <div class="card-body">
-              <h2 class="text-center">ALL Episodes</h2>
-              <hr>
-              <ul>
-               {%for episode in episodes%}
-               <li class='list-group-item'>
-                  <span class="badge bg-info">{{ episode.number }}</span>
-                    <span class="text-secondary">{{ episode.title }}</span>
-                    <div class="float-end">
-                      <span class="badge bg-dark">{{ episode.time }}</span>
-                      <span class="badge bg-success">{{ episode.type }}</span>
-                      <span class="badge bg-danger">Download</span>
-                    </div>
-               </li>
-               {%endfor%}
-              </ul>
+    
+      <div class="row justify-content-center">
+          <div class="col-3">
+          </div>
+          <div class="col-8 mt-4">
+            <div class="card">
+              <div class="card-header">List of Episode</div>
+              <div class="card-body">
+                <h2 class="text-center">ALL Episodes</h2>
+                <hr>
+                <ul>
+                {%for episode in episodes%}
+                <li class='list-group-item'>
+                    <span class="badge bg-info">{{ episode.number }}</span>
+                      <span class="text-secondary">{{ episode.title }}</span>
+                      <div class="float-end">
+                        <span class="badge bg-dark">{{ episode.time }}</span>
+                        {% if current_user.is_authenticated and current_user.id | string in course.students %}
+                          <a href='#'>Download</a>
+                        {% else %}
+                         <span class="badge bg-danger">Download</span>
+                        {% endif %}
+                        <span class="badge bg-success">{{ episode.type }}</span>
+                        
+                      </div>
+                </li>
+                {%endfor%}
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
+        {% else %}
+        <p>Course not found.</p>
+      {% endif %}
   </div>
 {% endblock %}
