@@ -2,12 +2,13 @@ from extensions import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash
 from flask_login import UserMixin
-from sqlalchemy import Column,Integer,String,Text,DateTime,ForeignKey,event
+from sqlalchemy import Column,Integer,String,Text,DateTime,ForeignKey,event,Boolean
 from slugify import slugify
 
 
 
 class User(db.Model, UserMixin):
+    __tablename__='user'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -47,7 +48,7 @@ class Course(db.Model):
    if value and(not target.slug and value != oldvalue):
       target.slug=slugify(value)
       
-db.event.listen(Course.title,'set',Course.generate_slug)
+
       
       
 class Episode(db.Model):
@@ -83,3 +84,32 @@ class Bascket(db.Model):
     
    def GetCourse(self):
       return Course.query.filter_by(id=self.course_id).first()
+   
+   
+
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=True)
+    course_id = Column(Integer, ForeignKey('courses.id'), nullable=True)
+    text = Column(Text)
+    status = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.now())
+                        
+    def getCourseName(self):
+        course = Course.query.filter_by(id=self.course_id).first()
+        return course.title
+
+    def getUserName(self):
+        usr = User.query.filter_by(id=self.user_id).first()
+        return usr.name
+
+    def getApprove(self):
+        if self.status:
+            return 'Approved'
+        else:
+            return 'Not Approved'                    
+   
+db.event.listen(Course.title,'set',Course.generate_slug)

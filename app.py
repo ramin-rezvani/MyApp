@@ -12,7 +12,8 @@ app.secret_key = secrets.token_hex(32)
 
 uplode_dir= os.path.curdir + '/static/uploads/'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'shop.db')
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'shop.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.environ.get(app.root_path, 'shop.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 #google recaptcha config
 app.config['RECAPTCHA_PUBLIC_KEY']='6LeTG-4qAAAAAFeKMuo0SJHrXkJepmHtLD5MqFvi'#public key
@@ -29,6 +30,13 @@ def user_loader(User_id):
     return User.query.get(User_id)
 
 
+@app.route('/init-db')
+def init_db():
+    with app.app_context():
+        db.create_all()
+    return "Database initialized!"
+
+
 #main Route
 app.add_url_rule('/',main,main.Main)
 app.add_url_rule('/search','getResultSearch',main.getResultSearch)
@@ -38,6 +46,8 @@ app.add_url_rule('/checkout','Checkout',main.Checkout,methods=['Get','post'])
 app.add_url_rule('/Payment','Payment',main.Payment,methods=['Get','post'])
 app.add_url_rule('/category/<string:name>','viewCategory',main.viewCategory)
 app.add_url_rule('/<string:slug>','Single',main.Single)
+app.add_url_rule('/<string:slug>/Comment','SendComment',main.SendComment,methods=['post'])
+
 #authentication Route
 
 app.add_url_rule("/signup","SignUp",authentication.SignUp,methods=['get','post'])
@@ -62,7 +72,8 @@ app.add_url_rule("/admin/editprofile","AdminEditProfile",adminpanel.AdminEditPro
 app.add_url_rule("/admin/upload","AdminUploadAvatar",adminpanel.AdminUploadAvatar,methods=['get','post'])
 app.add_url_rule("/admin/user","GetUserList",adminpanel.GetUserList,methods=['GET','POST'])
 app.add_url_rule("/admin/newuser","AddNewUser",adminpanel.AddNewUser,methods=['GET','POST'])
-
+app.add_url_rule("/admin/comments","GetCommentList",adminpanel.GetCommentList,methods=['GET','POST'])
+app.add_url_rule("/admin/comments/approve","ApproveComment",adminpanel.ApproveComment,methods=['POST'])
 #course route
 
 app.add_url_rule("/admin/episode/new","AddNewEpisode",adminpanel.AddNewEpisode,methods=['Get','POST'])

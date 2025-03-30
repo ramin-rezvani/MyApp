@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import app, db  # وارد کردن app و db از extensions
-from models import User,Course,Episode,Category
+from models import User,Course,Episode,Category,Comment
 from forms import ChangePasswordForm, EditProfileForm,NewUserForm,CourseForm,EpisodeForm,EditEpisodeForm,CategoryForm
 from werkzeug.utils import secure_filename
 from PIL import Image
@@ -409,3 +409,21 @@ class AdminController:
     second = floor(((second / 60) % 1) * 60)
 
     return "{:02d}:{:02d}:{:02d}".format(hours, minutes, second)
+
+
+ 
+ @login_required   
+ def GetCommentList(self):
+    if request.method == 'POST':
+        Comment.query.filter_by(id=request.args.get('id')).delete()
+        db.session.commit()
+        comments = Comment.query.all()
+        return render_template('admin/CommentList.html', comments=comments)
+    return render_template('admin/CommentList.html', comments=Comment.query.all())
+ @login_required
+ def ApproveComment(self):
+    comment = Comment.query.filter_by(id=request.args.get('id')).one()
+    comment.status = True
+    db.session.add(comment)
+    db.session.commit()
+    return redirect(url_for('GetCommentList'))

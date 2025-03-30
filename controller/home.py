@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import app, db  # وارد کردن app و db از extensions
-from models import User,Course,Episode,Category,Bascket
+from models import User,Course,Episode,Category,Bascket,Comment
 from forms import ChangePasswordForm, EditProfileForm,NewUserForm,CourseForm,EpisodeForm,EditEpisodeForm,CategoryForm
 from werkzeug.utils import secure_filename
 from PIL import Image
@@ -30,7 +30,8 @@ class HomeController:
         if not course:
           abort(404)  # یا یه صفحه 404 رندر کن
         episodes=Episode.query.filter_by(course_id=course.id).all()
-        return render_template('Single.html', course=course,episodes=episodes)   
+        comments=Comment.query.filter_by(course_id=course.id,status=True).all()
+        return render_template('Single.html', course=course,episodes=episodes,comments=comments)   
         
     def viewCategory(self, name):
      getCategory = Category.query.filter_by(name=name).first()
@@ -98,6 +99,18 @@ class HomeController:
             return redirect(url_for('main'))
         
         return redirect(url_for('Checkout'))
-            
+     
+     
+    def SendComment(self, slug):
+        user_id = current_user.id
+        course = Course.query.filter_by(slug=slug).first()
+        text = request.form.get('text')
+        newComment = Comment(user_id=user_id, course_id=course.id, text=text)
+        db.session.add(newComment)
+        db.session.commit()
+        return redirect(url_for('Single', slug=slug))
+    
+    
+                
 
     
