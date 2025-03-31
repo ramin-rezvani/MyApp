@@ -9,13 +9,11 @@ from models import User,Category
 
 app.secret_key = secrets.token_hex(32)
 
-app = Flask(__name__, template_folder='templates')
-handler = app
+
 uplode_dir= os.path.curdir + '/static/uploads/'
 
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'shop.db')
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + app.config(app.root_path, 'shop.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp/shop.db'  # برای Vercel
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.environ.get(app.root_path, 'shop.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 #google recaptcha config
 app.config['RECAPTCHA_PUBLIC_KEY']='6LeTG-4qAAAAAFeKMuo0SJHrXkJepmHtLD5MqFvi'#public key
@@ -26,13 +24,6 @@ db.init_app(app)
 loginmanager=LoginManager(app)
 loginmanager.login_view='Login'
 
-@app.cli.command("init-db")
-def init_db_command():
-    """Initialize the database."""
-    db.create_all()
-    print("Initialized the database.")  
-    
-    
 #return info user
 @loginmanager.user_loader
 def user_loader(User_id):
@@ -121,15 +112,5 @@ def ContextProcessor():
     return{
         'categories':Category.query.all()
     }
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return render_template('Home.html')
-
-@app.route('/<path:path>')
-def catch_all(path):
-    return render_template('Home.html')
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    app.run(debug=True)
