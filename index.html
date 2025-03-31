@@ -1,0 +1,60 @@
+{% extends "./Layout/Base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <h2>All Courses</h2>
+        {% if courses %}
+            {% for course in courses.items %}
+                <div class="col-4">
+                    <div class="card">
+                        <img class="card-img-top" height="250" src="{{ url_for('static', filename=course.image) }}" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ course.title }}</h5>
+                            <p class="card-text">{{ course.content | truncate(130, True) }}</p>
+                             <a href="{{ url_for('Single', slug=course.slug) }}" class="btn btn-primary">Read More</a>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Views : {{ course.ViewCount }}</small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h4>Nothing ...</h4>
+        {% endif %}
+
+        <!-- Pagination Section -->
+        <nav aria-label="...">
+            <ul class="pagination">
+                {% if courses.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('main', page=courses.prev_num) }}">Previous</a>
+                    </li>
+                    <!-- </li> -->
+                {% endif %}
+
+                {% for page_number in courses.iter_pages() %}
+                    {% if page_number %}
+                        {% if page_number != courses.page %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('main', page=page_number) }}">
+                                  {{ page_number }} 
+                                </a></li>
+                        {% else %}
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">{{ page_number }}</span>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if courses.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('main', page=courses.next_num) }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}
