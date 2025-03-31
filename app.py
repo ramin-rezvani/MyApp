@@ -13,9 +13,9 @@ app = Flask(__name__, template_folder='templates')
 handler = app
 uplode_dir= os.path.curdir + '/static/uploads/'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'shop.db')
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'shop.db')
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + app.config(app.root_path, 'shop.db')
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp/shop.db'  # برای Vercel
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp/shop.db'  # برای Vercel
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 #google recaptcha config
 app.config['RECAPTCHA_PUBLIC_KEY']='6LeTG-4qAAAAAFeKMuo0SJHrXkJepmHtLD5MqFvi'#public key
@@ -26,6 +26,13 @@ db.init_app(app)
 loginmanager=LoginManager(app)
 loginmanager.login_view='Login'
 
+@app.cli.command("init-db")
+def init_db_command():
+    """Initialize the database."""
+    db.create_all()
+    print("Initialized the database.")  
+    
+    
 #return info user
 @loginmanager.user_loader
 def user_loader(User_id):

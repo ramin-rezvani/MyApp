@@ -4,19 +4,21 @@
       {
         "src": "app.py",
         "use": "@vercel/python",
-        "config": { 
-          "maxLambdaSize": "15mb",
+        "config": {
+          "maxLambdaSize": "50mb",
           "includeFiles": [
             "templates/**",
-            "controllers/**",
-            "static/**"
+            "static/**",
+            "controller/**",
+            "models.py",
+            "extensions.py"
           ]
         }
       }
     ],
     "routes": [
       {
-        "src": "/(.*)", 
+        "src": "/(.*)",
         "dest": "app.py"
       }
     ]
