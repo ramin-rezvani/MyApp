@@ -6,20 +6,18 @@
         "use": "@vercel/python",
         "config": {
           "maxLambdaSize": "50mb",
-          "pythonVersion": "3.9",
+          "pythonVersion": "3.11",
           "includeFiles": [
             "templates/**",
-            "static/**",
-            "controller/**",
-            "models.py",
-            "extensions.py"
-          ]
+            "static/**"
+          ],
+          "installCommand": "pip install -r requirements.txt"
         }
       }
     ],
     "routes": [
       {
-        "src": "/(.*)",
+        "src": "/.*",
         "dest": "app.py"
       }
     ]
