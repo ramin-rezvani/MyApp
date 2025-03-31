@@ -23,7 +23,7 @@ class HomeController:
     def Main(self):
         page = request.args.get('page', default=1, type=int)
         allCourses = Course.query.paginate(page=page, per_page=2)
-        return render_template('Home.html', courses=allCourses)
+        return render_template('index.html', courses=allCourses)
 
     def Single(self, slug):
         course = Course.query.filter_by(slug=slug).first()
