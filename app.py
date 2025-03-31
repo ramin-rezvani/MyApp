@@ -9,11 +9,13 @@ from models import User,Category
 
 app.secret_key = secrets.token_hex(32)
 
-
+app = Flask(__name__, template_folder='templates')
+handler = app
 uplode_dir= os.path.curdir + '/static/uploads/'
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'shop.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.environ.get(app.root_path, 'shop.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'shop.db')
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + app.config(app.root_path, 'shop.db')
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp/shop.db'  # برای Vercel
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 #google recaptcha config
 app.config['RECAPTCHA_PUBLIC_KEY']='6LeTG-4qAAAAAFeKMuo0SJHrXkJepmHtLD5MqFvi'#public key
@@ -113,5 +115,5 @@ def ContextProcessor():
         'categories':Category.query.all()
     }
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=80)
+    app.run(debug=False)
     
