@@ -38,7 +38,7 @@ def init_db():
 
 
 #main Route
-app.add_url_rule('/',main,main.Main)
+#app.add_url_rule('/',main,main.Main)
 app.add_url_rule('/search','getResultSearch',main.getResultSearch)
 app.add_url_rule('/deleteCourse/<int:id>','DeleteCourse',main.DeleteCourse,methods=['post'])
 app.add_url_rule('/addtobascket','AddToBascket',main.AddToBascket,methods=['Get','post'])
@@ -114,3 +114,10 @@ def ContextProcessor():
     }
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=80)
+    
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "سلام! پروژه‌ام کار می‌کنه!"
