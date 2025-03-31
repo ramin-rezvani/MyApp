@@ -12,8 +12,8 @@ app.secret_key = secrets.token_hex(32)
 
 uplode_dir= os.path.curdir + '/static/uploads/'
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'shop.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.environ.get(app.root_path, 'shop.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'shop.db')
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.environ.get(app.root_path, 'shop.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 #google recaptcha config
 app.config['RECAPTCHA_PUBLIC_KEY']='6LeTG-4qAAAAAFeKMuo0SJHrXkJepmHtLD5MqFvi'#public key
