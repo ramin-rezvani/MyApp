@@ -8,7 +8,8 @@
     ],
     "routes": [
       {
-        "src": "/(.*)",
+        "type": "rewrite",
+        "src": "^/.*$",
         "dest": "app.py"
       }
     ]
