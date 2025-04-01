@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <h2>Result of Search: {{searchInput}}</h2>
+        <h2>Result of Search: {{ searchInput }}</h2>
         {% if courses %}
             {% for course in courses %}
                 <div class="col-4">
@@ -11,7 +11,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ course.title }}</h5>
                             <p class="card-text">{{ course.content | truncate(130, True) }}</p>
-                            <a href="{{ url_for('Single', slug=course.slug) }}" class="btn btn-primary">Read More</a>
+                            <a href="{{ url_for('main.Single', slug=course.slug) }}" class="btn btn-primary">Read More</a>
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">Views : {{ course.ViewCount }}</small>

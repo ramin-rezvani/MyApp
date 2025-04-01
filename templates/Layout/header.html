@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale = 1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WEB APPlication</title>
 
     <link
@@ -15,53 +15,53 @@
 
     <link
       rel="stylesheet"
-      href="{{ url_for('static' ,filename='/css/app.css') }}"
+      href="{{ url_for('static', filename='css/app.css') }}"
     />
   </head>
   <body>
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#"> Shop App</a>
+        <a class="navbar-brand" href="#">Shop App</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarScroll">
           <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{url_for('main')}}">Home</a>
+              <a class="nav-link active" aria-current="page" href="{{ url_for('main.Main') }}">Home</a>
             </li>
             {% if not current_user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link" href="{{url_for('Login')}}">SignIn</a>
+                <a class="nav-link" href="{{ url_for('auth.Login') }}">SignIn</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{url_for('SignUp')}}">SignOut</a>
+                <a class="nav-link" href="{{ url_for('auth.SignUp') }}">SignUp</a>
               </li>
-            {%else:%}
-                <li class="nav-item">
-                 <a class="nav-link" href="{{url_for('index')}}">Panel Account</a>
-                </li>
-            {%endif%}
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin.index') if current_user.admin else url_for('user.Panel') }}">Panel Account</a>
+              </li>
+            {% endif %}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Category
               </a>
               <ul class="dropdown-menu">
-                {%for category in categories%}
-                <li><a class="dropdown-item" href="{{url_for('viewCategory',name=category.name)}}">{{category.name}}</a></li>
-                {%endfor%}
+                {% for category in categories %}
+                  <li><a class="dropdown-item" href="{{ url_for('main.viewCategory', name=category.name) }}">{{ category.name }}</a></li>
+                {% endfor %}
               </ul>
             </li>
             <li class="nav-item">
               <a class="nav-link disabled" aria-disabled="true">Link</a>
             </li>
           </ul>
-          <form action="{{ url_for('getResultSearch') }}" method="GET" class="d-flex" role="search">
-              <input class="form-control me-2" name="s" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
+          <form action="{{ url_for('main.getResultSearch') }}" method="GET" class="d-flex" role="search">
+            <input class="form-control me-2" name="s" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
         </div>
       </div>
     </nav>
-
-
+  </body>
+</html>

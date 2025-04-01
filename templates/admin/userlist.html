@@ -1,50 +1,48 @@
-{% extends "./Layout/base.html" %} 
+{% extends "./Layout/base.html" %}
 {% block content %}
-  <div class="container mt-5">
-     <div class="row justify-content-center">
-         {% include "./Layout/AdminMenu.html" %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        {% include "./Layout/AdminMenu.html" %}
         <div class="col-8">
-          <div class='card'>
-          <div class='card-header'>User list</div>
-          <div class='card-body '>
-            <table class="table table-bordred table-striped">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Role</th>
-                  <th scope="col">Data Created</th>
-                  <th scope="col">Operation</th>
-                </tr>
-              </thead>
-              <tbody>
-                 {%for user in users %}
-                <tr>
-                  <td> {{loop.index}}</td>
-                  <td> {{user.name}}</td>
-                  <td> {{user.email}}</td>
-                  <td> {{"Admin" if user.admin else 'User'}}</td>
-                  <td> {{user.date_created}}</td>
-                  <td> 
-                    <div class="btn-group" role="group">
-                      <a herf="#" class="btn btn-warning btn-sm">Edit</a>
-                      {% if not user.admin %}
-                      <form action="{{ url_for('GetUserList')}}?id={{user.id}}" method="POST">
-                         <button class="btn btn-danger btn-sm">Del</button>
-                      </form>
-                      {% endif %}
-                    </div>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-            
+            <div class="card">
+                <div class="card-header">User list</div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Date Created</th>
+                                <th scope="col">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ user.name }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ "Admin" if user.admin else "User" }}</td>
+                                    <td>{{ user.date_created }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="#" class="btn btn-warning btn-sm">Edit</a>
+                                            {% if not user.admin %}
+                                                <form action="{{ url_for('admin.GetUserList') }}?id={{ user.id }}" method="POST">
+                                                    <button class="btn btn-danger btn-sm">Del</button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-            </form> 
-         </div>
-      </div>
-</div>                
-
-{% endblock content %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

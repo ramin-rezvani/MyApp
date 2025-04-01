@@ -11,7 +11,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ course.title }}</h5>
                             <p class="card-text">{{ course.content | truncate(130, True) }}</p>
-                             <a href="{{ url_for('Single', slug=course.slug) }}" class="btn btn-primary">Read More</a>
+                            <a href="{{ url_for('main.Single', slug=course.slug) }}" class="btn btn-primary">Read More</a>
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">Views : {{ course.ViewCount }}</small>
@@ -28,18 +28,18 @@
             <ul class="pagination">
                 {% if courses.has_prev %}
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('main', page=courses.prev_num) }}">Previous</a>
+                        <a class="page-link" href="{{ url_for('main.Main', page=courses.prev_num) }}">Previous</a>
                     </li>
-                    <!-- </li> -->
                 {% endif %}
 
                 {% for page_number in courses.iter_pages() %}
                     {% if page_number %}
                         {% if page_number != courses.page %}
                             <li class="page-item">
-                                <a class="page-link" href="{{ url_for('main', page=page_number) }}">
+                                <a class="page-link" href="{{ url_for('main.Main', page=page_number) }}">
                                   {{ page_number }} 
-                                </a></li>
+                                </a>
+                            </li>
                         {% else %}
                             <li class="page-item active" aria-current="page">
                                 <span class="page-link">{{ page_number }}</span>
@@ -50,7 +50,7 @@
 
                 {% if courses.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('main', page=courses.next_num) }}">Next</a>
+                        <a class="page-link" href="{{ url_for('main.Main', page=courses.next_num) }}">Next</a>
                     </li>
                 {% endif %}
             </ul>

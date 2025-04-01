@@ -20,7 +20,7 @@
                                 <td>{{ product.GetCourse().title }}</td>
                                 <td>{{ product.GetCourse().price }}</td>
                                 <td>
-                                    <form action="{{ url_for('DeleteCourse', id=product.id) }}" method="POST">
+                                    <form action="{{ url_for('main.DeleteCourse', id=product.id) }}" method="POST">
                                         <button class="btn btn-danger">Delete</button>
                                     </form>
                                 </td>
@@ -28,11 +28,11 @@
                         {% endfor %}
                         <tr>
                             <td colspan="2" class="text-right"><strong>Total Price:</strong></td>
-                            <td>{{ total_price  | Commafy}}</td>
+                            <td>{{ total_price | Commafy }}</td>
                         </tr>
-                        <form action='{{url_for('Payment')}}' method='post'>
+                        <form action="{{ url_for('main.Payment') }}" method="POST">
                             <div class="justify-content-center text-center mt-3">
-                                <button class='btn btn-outline-success'>Payment</button>
+                                <button class="btn btn-outline-success">Payment</button>
                             </div>
                         </form>
                     {% else %}
@@ -42,4 +42,5 @@
             </table>
         </div>
     </div>
+</div>
 {% endblock %}

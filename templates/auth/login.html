@@ -1,12 +1,10 @@
 {% extends "./Layout/base.html" %}
 {% block content %}
-
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-6">
             <h2 class="text-center">Login Form</h2>
             <hr>
-
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
               {% for category, message in messages %}
@@ -14,21 +12,18 @@
               {% endfor %}
             {% endif %}
            {% endwith %}
-
-            <form action="{{ url_for('Login') }}" method="POST" novalidate>
+            <form action="{{ url_for('auth.Login') }}" method="POST" novalidate>
                 {{ form.csrf_token }}
-                <!-- فیلد نام کامل -->
-                  <input type='hidden' name='next' value='{{request.args.get('next','')}}'>
+                <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
                 <div class="form-group mb-3">
-                    {{ form.email(placeholder='enter email', class='form-control') }}
+                    {{ form.email(placeholder="enter email", class="form-control") }}
                 </div>
                 <div class="form-group mb-3">
-                    {{ form.password(placeholder='enter password', class='form-control') }}
+                    {{ form.password(placeholder="enter password", class="form-control") }}
                 </div>
                 <div class="form-group mb-3">
-                    {{form.recaptcha}}
+                    {{ form.recaptcha }}
                 </div>
-               
                 <div class="form-group mb-3">
                     <button class="btn btn-danger w-100">Login</button>
                 </div>
@@ -36,5 +31,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}

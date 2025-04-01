@@ -1,54 +1,52 @@
-{% extends "./Layout/base.html" %} 
+{% extends "./Layout/base.html" %}
 {% block content %}
-  <div class="container mt-5">
-     <div class="row justify-content-center">
-         {% include "./Layout/AdminMenu.html" %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        {% include "./Layout/AdminMenu.html" %}
         <div class="col-8">
-          <div class='card'>
-          <div class='card-header'>User list</div>
-          <div class='card-body '>
-            <table class="table table-bordred table-striped">
-              <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">User Name</th>
-                    <th scope="col">Course Name</th>
-                    <th scope="col">Text</th>
-                    <th scope="col">Approve</th>
-                    <th scope="col">Date Created</th>
-                    <th scope="col">Operation</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for comment in comments %}
-                        <tr>
-                            <td>{{ loop.index }}</td>
-                            <td>{{ comment.getUserName() }}</td>
-                            <td>{{ comment.getCourseName() }}</td>
-                            <td>{{ comment.text }}</td>
-                            <td>{{ comment.getApprove() }}</td>
-                            <td>{{ comment.created_at }}</td>
-                            <td>
-                        <div class="btn-group" role="group">
-                            <form action="{{ url_for('GetCommentList') }}?id={{ comment.id }}" method="post">
-                                <button class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                            {%if not comment.status%}
-                            <form action="{{ url_for('GetCommentList') }}/approve?id={{ comment.id }}" method="post">
-                                <button class="btn btn-success btn-sm">Approve</button>
-                            </form>
-                            {%endif%}
-                              </div>
-                               </td>
-                              </tr>
-                              {% endfor %}
-                          </tbody>
-            </table>
-            
+            <div class="card">
+                <div class="card-header">User list</div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">User Name</th>
+                                <th scope="col">Course Name</th>
+                                <th scope="col">Text</th>
+                                <th scope="col">Approve</th>
+                                <th scope="col">Date Created</th>
+                                <th scope="col">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for comment in comments %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ comment.getUserName() }}</td>
+                                    <td>{{ comment.getCourseName() }}</td>
+                                    <td>{{ comment.text }}</td>
+                                    <td>{{ comment.getApprove() }}</td>
+                                    <td>{{ comment.created_at }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <form action="{{ url_for('admin.GetCommentList') }}?id={{ comment.id }}" method="post">
+                                                <button class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                            {% if not comment.status %}
+                                                <form action="{{ url_for('admin.GetCommentList') }}/approve?id={{ comment.id }}" method="post">
+                                                    <button class="btn btn-success btn-sm">Approve</button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-              </div> 
-         </div>
-      </div>
-</div>                
-
-{% endblock content %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

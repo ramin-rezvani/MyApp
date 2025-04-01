@@ -1,30 +1,29 @@
-{% extends "./Layout/base.html" %} 
+{% extends "./Layout/base.html" %}
 {% block content %}
-  <div class="container mt-5">
-     <div class="row">
-         {% include "./Layout/AdminMenu.html" %}
-         <div class="col-8">
-            <div class='card'>
-            <div class='card-header'>Content</div>
-            <div class='card-body justify-content-center'>
-            <h2 class="text-center">Login Form</h2>
-            <hr>
-
-           <form action="{{ url_for('AdminEditProfile') }}" method="POST" novalidate>
-            {{ form.hidden_tag() }}
-            <!-- فیلد نام کامل -->
-            <div class="form-group mb-3">
-                {{ form.name(placeholder='name', class='form-control') }}
-            </div>
-            <div class="form-group mb-3">
-                {{ form.email(placeholder='enter email', class='form-control') }}
-            </div>
-            <div class="form-group mb-3">
-                <button class="btn btn-danger w-100">Edit Profile</button>
+<div class="container mt-5">
+    <div class="row">
+        {% include "./Layout/AdminMenu.html" %}
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header">Content</div>
+                <div class="card-body justify-content-center">
+                    <h2 class="text-center">Edit Profile Form</h2>
+                    <hr>
+                    <form action="{{ url_for('admin.AdminEditProfile') }}" method="POST" novalidate>
+                        {{ form.hidden_tag() }}
+                        <div class="form-group mb-3">
+                            {{ form.name(placeholder="name", class="form-control") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ form.email(placeholder="enter email", class="form-control") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            <button class="btn btn-danger w-100">Edit Profile</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}
-
