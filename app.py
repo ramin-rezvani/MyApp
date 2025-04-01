@@ -5,9 +5,12 @@ import os
 from flask_login import LoginManager,login_user,logout_user,current_user,logout_user,login_required
 from controller import authentication,main,userPanel,adminpanel
 from models import User,Category
+from flask_sqlalchemy import SQLAlchemy
 
 
 app.secret_key = secrets.token_hex(32)
+db = SQLAlchemy()
+app = Flask(__name__)
 
 
 uplode_dir= os.path.curdir + '/static/uploads/'
